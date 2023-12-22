@@ -19,7 +19,8 @@ HTTP path (upload data)     : /revenues?client={client_id}
 ## INSTRUCTIONS
 
 #### Prerequisites
-A virtual Python3.10 environment. For instance, using `pipenv install` in the project root
+- A virtual Python3.10 environment. For instance, using `pipenv install` in the project root
+- Rename `.env_template` to `.env`
 
 ### Local script
 Run `python task2.py` 
