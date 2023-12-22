@@ -11,8 +11,10 @@ load_dotenv()
 URL_COUNTRIES = os.getenv('URL_COUNTRIES')
 URL_AIRPORTS = os.getenv('URL_AIRPORTS')
 HOST_ADDRESS = os.getenv('HOST_ADDRESS')
+CLIENT_ID = os.getenv('CLIENT_ID')
 
 OUTPUT_FILENAME = 'countries_info.csv'
+UPLOAD_FILENAME = 'revenues.txt'
 
 logger_task2 = logging.getLogger()
 logger_task2.setLevel(logging.INFO)
@@ -68,12 +70,34 @@ def store_countries_info(countries_info:DF)->None:
     logger_task2.info(f'Saved all countries info to {output_path.as_posix()}')
 
 
+def upload_file_to_endpoint()->None:
+    url = f"http://{HOST_ADDRESS}/revenues?client={CLIENT_ID}"
+
+    with open(UPLOAD_FILENAME, 'rb') as f:
+        response = requests.post(url, files={'file': f})
+
+    if response.ok:
+        logger_task2.info(f"File {UPLOAD_FILENAME} uploaded successfully.")
+    else:
+        logger_task2.error(f"Failed to upload file {UPLOAD_FILENAME}. Status: {response.status_code}")
+
+
 
 def main():
+    """
+    TASK 2-A
+    """
     df_countries, df_airports = load_dataframes(URL_COUNTRIES, URL_AIRPORTS)
     countries_with_airports = get_countries(df_countries, df_airports)
     countries_info = fetch_countries_info(countries_with_airports)
     store_countries_info(countries_info)
+
+    """
+    TASK 2-B
+    """
+    with open(UPLOAD_FILENAME, 'w') as _:
+        pass
+    upload_file_to_endpoint()
 
 
 if __name__ == '__main__':
