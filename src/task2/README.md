@@ -16,4 +16,17 @@ HTTP path (upload data)     : /revenues?client={client_id}
 
 
 
-# 
+## INSTRUCTIONS
+
+#### Prerequisites
+A virtual Python3.10 environment. For instance, using `pipenv install` in the project root
+
+### Local script
+Run `python task2.py` 
+
+### Docker
+Run 
+```
+docker build . --tag task2
+docker run --rm task2
+```
