@@ -52,7 +52,7 @@ def test(data: List[Dict[Any,Any]]=[dict(one=1,two=2),dict(three=3,four=4)])->Li
 
 @app.post("/predict")
 async def predict(data: Dict[str, Any])->Dict:
-    """Predict a single datapoint
+    """!NotImplemented! Predict a single datapoint 
 
     Args:
         data (Dict[str, Any]): _description_
@@ -79,10 +79,10 @@ async def predict(data: Dict[str, Any])->Dict:
 
 @app.post("/predict_batch")
 async def predict_batch(data: List[Dict[str, Any]])->Dict:
-    """Make a batch-prediction
+    """Make a batch-prediction. See test_app.py/predict_batch() for example
 
     Args:
-        data (List[Dict[str, Any]]): _description_
+        data (List[Dict[str, Any]]): DF serialized to a list of dict, row by row
 
     Raises:
         HTTPException: _description_

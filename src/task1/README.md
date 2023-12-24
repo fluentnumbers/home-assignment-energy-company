@@ -47,5 +47,9 @@ The extra tricks you possibly have up your sleeve can consist of any good practi
 Run `python task1.py` 
 
 ### Docker
+- Build and run the container:
 `docker build . --tag task1`
 `docker run -p 5000:5000 task1`
+- Access the FastAPI on the host: http://localhost:5000
+- Test the container on a given dataset:
+`python src/task1/test_app.py`

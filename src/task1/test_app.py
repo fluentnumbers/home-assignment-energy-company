@@ -1,3 +1,5 @@
+"""This script can be used to test the FastAPi endpoints from app.py (running locally or in a container)
+"""
 import os
 from dotenv import load_dotenv
 import numpy as np
@@ -12,6 +14,8 @@ FASTAPI_PORT = os.getenv('FASTAPI_PORT')
 
 
 def predict_batch():
+    """Run predictive model on data from a csv file (batch)
+    """
     data = pd.read_csv(DATASET_PATH)
     # TODO: fix the issue with nan-serialization INSIDE the app or INSIDE the Predictor class
     data = data.fillna(np.nan).replace([np.nan], [None])  
@@ -24,6 +28,8 @@ def predict_batch():
         print(f"Returned {response.status_code} - {response.reason}: {response.json()['detail']}")
 
 def predict():
+    """Run predictive model on data from a csv file (batch) line by line (single datapoint each time)
+    """    
     data = pd.read_csv(DATASET_PATH)
     data = data.fillna(np.nan).replace([np.nan], [None])
     data = data.to_dict(orient='records')

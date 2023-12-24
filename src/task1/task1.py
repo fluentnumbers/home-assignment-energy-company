@@ -40,7 +40,15 @@ logger_task1.addHandler(handler)
 
 
 class Predictor:
+    """Wrapper-class around the predictive model 
+    """
     def __init__(self, model_path: Path, store_as_csv=False)->None:
+        """Class instance initialization
+
+        Args:
+            model_path (Path): _description_
+            store_as_csv (bool, optional): _description_. Defaults to False.
+        """
         #TODO: assertions
         assert model_path.exists(), f"Model object file {model_path} not found"
         with open(model_path.as_posix(), 'rb') as file:
@@ -53,6 +61,14 @@ class Predictor:
         self.store_as_csv = store_as_csv
 
     def preprocess_data(self, df_raw: DF) -> DF:
+        """Perform all preprocessing operatione (e.g. nan-filling) on the dataset
+
+        Args:
+            df_raw (DF): _description_
+
+        Returns:
+            DF: _description_
+        """
         #TODO: fix the case when df_raw has one row with NaN values.
 
         ##### INTERNAL FUNCTIONS ####################
@@ -112,13 +128,30 @@ class Predictor:
         return df_preprocessed
 
 
-    def batch_predict(self, data: DF) -> np1d:      
+    def batch_predict(self, data: DF) -> np1d:
+        """Run model.predict()
+
+        Args:
+            data (DF): _description_
+
+        Returns:
+            np1d: _description_
+        """
         prediction_probability = self.model.predict_proba(data[self.predictors])
         buy_toon_chance = prediction_probability[:,-1]
         return buy_toon_chance
     
 
     def process_predictions(self,hashed_ids: np1d, buy_toon_chance: np1d)->DF:
+        """Concatenate predictions with context variables and id, prttifiyng the outputs
+
+        Args:
+            hashed_ids (np1d): _description_
+            buy_toon_chance (np1d): _description_
+
+        Returns:
+            DF: _description_
+        """
         prospects = DF(dict(possible_prospect=buy_toon_chance>0.5)) 
         chances = DF(dict(reject_toon_chance=1-buy_toon_chance,buy_toon_chance=buy_toon_chance))
         customer_id = DF(dict(customer_id=hashed_ids))
@@ -134,11 +167,27 @@ class Predictor:
         return df_output
 
     def store_predictions(self, df_output:DF)->None:
+        """Save outputs as a .csv file
+
+        Args:
+            df_output (DF): _description_
+        """
         output_path = Path(f'{self.processing_time}.csv')
         df_output.to_csv(output_path, index=False)
         logger_task1.info(f"Output stored at: {output_path}")
 
     def process_dataset(self, data: Union[DF,str])->DF:
+        """Main Predictor() class entrance point
+
+        Args:
+            data (Union[DF,str]): DataFrame or a path to be read by pd.read_csv()
+
+        Raises:
+            ValueError: if NaN-values remain in the dataset after the preprocessing step
+
+        Returns:
+            DF: _description_
+        """
         self.processing_time = datetime.now().strftime("%Y%m%d_%H_%M_%S")  # NB: will overwrite if processing < 1 sec
 
         if type(data) in [str, Path]:
