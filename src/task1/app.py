@@ -39,7 +39,7 @@ state.set_ready_status(True)
 #TODO: prettify docstrings
 
 @app.post('/test')
-def test(data: List[Dict[Any, Any]]=[dict(one=1,two=2),dict(three=3,four=4)])->Dict: 
+def test(data: List[Dict[Any,Any]]=[dict(one=1,two=2),dict(three=3,four=4)])->List[Dict]: 
     """Dummy endpoint returning the inputs, easy testing from the FastAPI docs GUI
 
     Args:
@@ -129,4 +129,4 @@ def redirect_docs():
     return RedirectResponse(url="/docs")
 
 if __name__ == "__main__":
-    uvicorn.run("app:app", port=FASTAPI_PORT, log_level="info")
+    uvicorn.run("app:app",host="0.0.0.0", port=FASTAPI_PORT, log_level="info")

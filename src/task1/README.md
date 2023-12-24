@@ -47,3 +47,5 @@ The extra tricks you possibly have up your sleeve can consist of any good practi
 Run `python task1.py` 
 
 ### Docker
+`docker build . --tag task1`
+`docker run -p 5000:5000 task1`
