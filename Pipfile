@@ -11,6 +11,11 @@ pyyaml = "*"
 pathlib = "*"
 python-dotenv = "*"
 pytest = "*"
+scikit-learn = "*"
+matplotlib = "*"
+seaborn = "*"
+ipykernel = "*"
+nptyping = "*"
 
 [dev-packages]
 
