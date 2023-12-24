@@ -1,0 +1,9 @@
+pathlib
+pandas 
+python-dotenv
+requests
+nptyping
+uvicorn
+fastapi
+loguru
+scikit-learn

@@ -11,6 +11,15 @@ pyyaml = "*"
 pathlib = "*"
 python-dotenv = "*"
 pytest = "*"
+scikit-learn = "*"
+matplotlib = "*"
+seaborn = "*"
+ipykernel = "*"
+nptyping = "*"
+fastapi = "*"
+uvicorn = "*"
+orjson = "*"
+loguru = "*"
 
 [dev-packages]
 

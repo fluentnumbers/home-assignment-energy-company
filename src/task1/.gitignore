@@ -1,0 +1,6 @@
+# .gitignore sample
+# Ignore files in this dir...
+*.log
+model_toon.ipynb
+model_toon.ipynb:Zone.Identifier
+# ... except for
