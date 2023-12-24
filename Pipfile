@@ -16,6 +16,10 @@ matplotlib = "*"
 seaborn = "*"
 ipykernel = "*"
 nptyping = "*"
+fastapi = "*"
+uvicorn = "*"
+orjson = "*"
+loguru = "*"
 
 [dev-packages]
 
