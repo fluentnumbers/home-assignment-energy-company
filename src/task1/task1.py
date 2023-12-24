@@ -3,15 +3,12 @@ import os
 import pickle
 from datetime import datetime
 from pathlib import Path
-from typing import Any, List, Dict
+from typing import Any, List, Dict, Union
 
-import pathlib as pl
 from pandas import DataFrame as DF
 from dotenv import load_dotenv
 
 import pandas as pd
-from pandas import DataFrame
-
 from nptyping import NDArray
 from nptyping.shape import Shape
 
@@ -43,7 +40,8 @@ logger_task1.addHandler(handler)
 
 
 class Predictor:
-    def __init__(self, model_path: Path,)->None:
+    def __init__(self, model_path: Path, store_as_csv=False)->None:
+        #TODO: assertions
         assert model_path.exists(), f"Model object file {model_path} not found"
         with open(model_path.as_posix(), 'rb') as file:
             self.model = pickle.load(file)
@@ -52,8 +50,11 @@ class Predictor:
         self.response_col = COLUMN_RESPONSE 
         self.id_col = COLUMN_ID
         self.processing_time = None  # redefined at self.run()
-        
+        self.store_as_csv = store_as_csv
+
     def preprocess_data(self, df_raw: DF) -> DF:
+        #TODO: fix the case when df_raw has one row with NaN values.
+
         ##### INTERNAL FUNCTIONS ####################
         def fill_na_with_median(df:DF, cols: list) -> DF:
             for col in cols:
@@ -95,9 +96,18 @@ class Predictor:
         cols_bool = ['bought_toon', 'has_active_boiler_rent_contract', 'has_active_electricity_contract', 'has_phone_number']
         df_preprocessed = fill_na_with_mode(df_preprocessed, cols_bool)
 
-        assert df_preprocessed.isna().sum().sum() == 0
-
         df_preprocessed = pd.get_dummies(df_preprocessed, columns=['electricity_last_contract_term','province'], drop_first=True)
+
+        # ensure dummy-columns are always present
+        for postfix in ['2 YEARS', '3 YEARS','4 YEARS','5 YEARS', 'INDEFINITE','onbekend']:
+            col = f'electricity_last_contract_term_{postfix}'
+            if col not in df_preprocessed:
+                df_preprocessed[col] = False
+        
+        for postfix in ['FLEVOLAND', 'FRIESLAND','GELDERLAND','GRONINGEN', 'LIMBURG','NOORD-BRABANT','NOORD-HOLLAND','OVERIJSSEL','UTRECHT','ZEELAND', 'ZUID-HOLLAND', 'onbekend']:
+            col = f'province_{postfix}'
+            if col not in df_preprocessed:
+                df_preprocessed[col] = False
 
         return df_preprocessed
 
@@ -107,7 +117,8 @@ class Predictor:
         buy_toon_chance = prediction_probability[:,-1]
         return buy_toon_chance
     
-    def store_predictions(self, hashed_ids: np1d, buy_toon_chance: np1d)->None:
+
+    def process_predictions(self,hashed_ids: np1d, buy_toon_chance: np1d)->DF:
         prospects = DF(dict(possible_prospect=buy_toon_chance>0.5)) 
         chances = DF(dict(reject_toon_chance=1-buy_toon_chance,buy_toon_chance=buy_toon_chance))
         customer_id = DF(dict(customer_id=hashed_ids))
@@ -120,12 +131,20 @@ class Predictor:
                 axis=1) \
                     .sort_values(['buy_toon_chance', 'reject_toon_chance'],
                     ascending = [False, True])
-        
+        return df_output
+
+    def store_predictions(self, df_output:DF)->None:
         output_path = Path(f'{self.processing_time}.csv')
         df_output.to_csv(output_path, index=False)
-        logger_task1.info(f"Predictions stored at: {output_path}")
+        logger_task1.info(f"Output stored at: {output_path}")
 
-    def process_dataset(self, data: DF):
+    def process_dataset(self, data: Union[DF,str])->DF:
+        self.processing_time = datetime.now().strftime("%Y%m%d_%H_%M_%S")  # NB: will overwrite if processing < 1 sec
+
+        if type(data) in [str, Path]:
+            logger_task1.info(f'Reading data from {data}...')
+            data = pd.read_csv(data, sep=',')
+
         if self.response_col not in data:
             data[self.response_col] = False
         data = data[data[self.response_col]==False]
@@ -134,17 +153,21 @@ class Predictor:
 
         df_preprocessed = self.preprocess_data(data)
 
+        if df_preprocessed.isna().sum().sum() != 0:
+            #TODO: fail graciously
+            logger_task1.error("Preprocessing is not done properly, there are NaN values in the dataset!")
+            raise ValueError("Preprocessing is not done properly, there are NaN values in the dataset!")
+
+
         buy_toon_chance = self.batch_predict(df_preprocessed)
+        df_output = self.process_predictions(hashed_ids, buy_toon_chance,)
 
-        self.store_predictions(hashed_ids, buy_toon_chance,)
-
-    def run(self, dataset_path: str):
-        self.processing_time = datetime.now().strftime("%Y%m%d_%H_%M_%S")  # NB: will overwrite if processing < 1 sec
-        logger_task1.info(f'Reading data from {dataset_path}...')
-        data = pd.read_csv(dataset_path, sep=',')
-        self.process_dataset(data)
+        if self.store_as_csv:
+            self.store_predictions(df_output)
+        return df_output
 
 
 if __name__ == "__main__":
-    predictor = Predictor(Path(Path(__file__).parent,'models', MODEL_FILENAME))
-    predictor.run(DATASET_PATH)
+    predictor = Predictor(Path(Path(__file__).parent,'models', MODEL_FILENAME), store_as_csv=True)
+    df_output = predictor.process_dataset(DATASET_PATH)
+    logger_task1.info('Task1 finished.\n\n\n')
