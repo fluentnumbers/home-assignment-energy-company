@@ -20,6 +20,8 @@ fastapi = "*"
 uvicorn = "*"
 orjson = "*"
 loguru = "*"
+pre-commit = "*"
+pylint = "*"
 
 [dev-packages]
 

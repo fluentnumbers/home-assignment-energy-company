@@ -1,0 +1,51 @@
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.4.0
+  hooks:
+      - id: end-of-file-fixer
+      - id: check-added-large-files
+      - id: fix-byte-order-marker
+      - id: detect-private-key
+      - id: trailing-whitespace
+      - id: check-docstring-first
+      - id: check-merge-conflict
+      - id: check-yaml
+      - id: check-toml
+      - id: check-json
+- repo: https://github.com/pycqa/isort
+  rev: 5.12.0
+  hooks:
+    - id: isort
+      args: ["--profile", "black", "--filter-files"]
+      name: isort (python)
+- repo: https://github.com/psf/black
+  rev: 23.7.0
+  hooks:
+    - id: black
+      language_version: python3.10
+      entry: black -l 100 --quiet
+- repo: local
+  hooks:
+    - id: pylint
+      name: pylint
+      entry: pylint
+      language: system
+      types: [python]
+      args: [
+        "-rn", # Only display messages
+        "-sn", # Don't display the score
+        "--recursive=y",
+        "--fail-under=5",
+      ]
+  #FIXME: fails to run in custom venv: https://github.com/microsoft/vscode-python/issues/10165
+- repo: local
+  hooks:
+    - id: pytest-check
+      name: pytest-check
+      entry: pytest
+      language: system
+      pass_filenames: false
+      always_run: true
+      args: [
+        "tests"
+      ]
