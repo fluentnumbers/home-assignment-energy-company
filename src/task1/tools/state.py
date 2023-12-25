@@ -1,5 +1,6 @@
 class State:
     """FastAPI state manager"""
+
     _instance = None
 
     def __new__(cls):

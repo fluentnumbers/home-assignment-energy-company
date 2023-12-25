@@ -10,7 +10,7 @@ The following exercises are designed to be a quick assessment of the candidates 
 
 2. **The choice of tooling to conclude any of the exercises is up to the candidate.** There are no requirements regarding tools or techniques, use whatever you think will be a good fit. Please note that in this case it would be wise to favor fast/pragmatic results over rigid engineering. However, we may ask you about how your solution could be used in a production environment.
 
-3. **You are requested to provide a summary write-up of your results.** If you have any code to share, please include that as well. Note that some assignments are intentionally vague. You're free to make any assumptions you think are necessary, but be prepared to defend the choices you made. 
+3. **You are requested to provide a summary write-up of your results.** If you have any code to share, please include that as well. Note that some assignments are intentionally vague. You're free to make any assumptions you think are necessary, but be prepared to defend the choices you made.
 
 4. **On the usage of (instruct) LLMs / ChatGPT**.
 If you decide to use LLMs (e.g. `ChatGPT`, `Copilot`, `Bard`, `Mistral`), make sure to be transparent about it and include a comment or a section in your write-up explaining how you have used it. We are interested in your thought process and how you would approach the problem, not in the output of the LLMs (while they are very useful for prototyping!). If you would like to go the extra mile, you can provide the reproducibility parameters of the LLMs if available (e.g. `system_fingerprint`, `seed`, `temperature=0` and `model` (i.e. `gpt-4-1106-preview` ) for `ChatGPT`).
@@ -19,30 +19,30 @@ If you decide to use LLMs (e.g. `ChatGPT`, `Copilot`, `Bard`, `Mistral`), make s
 
 ### Scenario
 
-You are the new, lone Machine Learning Engineer at an energy provider called *Oconé*. A data scientist in the company has handed this notebook (i.e. [model_toon.ipynb](https://sacodeassessment.blob.core.windows.net/public/model_toon.ipynb), with saved [models.zip](https://sacodeassessment.blob.core.windows.net/public/models.zip)) over to you. The notebook needs to be quickly put into production. 
+You are the new, lone Machine Learning Engineer at an energy provider called *Oconé*. A data scientist in the company has handed this notebook (i.e. [model_toon.ipynb](https://sacodeassessment.blob.core.windows.net/public/model_toon.ipynb), with saved [models.zip](https://sacodeassessment.blob.core.windows.net/public/models.zip)) over to you. The notebook needs to be quickly put into production.
 
-Unfortunately, the data scientist in question has gone on holiday. This notebook is all you have to work with, there are no questions you can ask. Your tech lead is a terribly busy person, but luckily, they have left some instructions. 
+Unfortunately, the data scientist in question has gone on holiday. This notebook is all you have to work with, there are no questions you can ask. Your tech lead is a terribly busy person, but luckily, they have left some instructions.
 
-You have limited time to complete the assignment, your schedule allows you 3-6 hours to work on this. A sticky situation. However, luck is that you can completely choose your own tooling for this work. 
+You have limited time to complete the assignment, your schedule allows you 3-6 hours to work on this. A sticky situation. However, luck is that you can completely choose your own tooling for this work.
 
-Your tech lead expects you to complete the minimum requirements. However, to make a good impression on your first delivery, you might want to add a few more bells and whistles, than just these bare requirements. 
+Your tech lead expects you to complete the minimum requirements. However, to make a good impression on your first delivery, you might want to add a few more bells and whistles, than just these bare requirements.
 
 The extra tricks you possibly have up your sleeve can consist of any good practices in the field but are expected to fit within the boundaries of a coding repository. See the other files that are part of this section in the files paragraph.
 
-### Instructions 
- 
->Hi new Machine Learning Engineer, 
+### Instructions
+
+>Hi new Machine Learning Engineer,
 >
->Welcome aboard! For this solution I expect you to use best practices when deploying ML solutions. I trust your expertise and am giving you a free hand in how to set this up, but I would like you to at least include: 
+>Welcome aboard! For this solution I expect you to use best practices when deploying ML solutions. I trust your expertise and am giving you a free hand in how to set this up, but I would like you to at least include:
 >
 >- Refactoring of the code
->- Some form of CI 
->- Containerization 
+>- Some form of CI
+>- Containerization
 >
 >
->Good luck and I will see you next week when I have time. I am looking forward to your solution! 
+>Good luck and I will see you next week when I have time. I am looking forward to your solution!
 >
->Greetings, 
+>Greetings,
 >
 >Tech Lead
 

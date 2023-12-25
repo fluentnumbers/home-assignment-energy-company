@@ -1,5 +1,5 @@
 pathlib
-pandas 
+pandas
 python-dotenv
 requests
 nptyping

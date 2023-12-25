@@ -23,10 +23,10 @@ HTTP path (upload data)     : /revenues?client={client_id}
 - Rename `.env_template` to `.env`
 
 ### Local script
-Run `python task2.py` 
+Run `python task2.py`
 
 ### Docker
-Run 
+Run
 ```
 docker build . --tag task2
 docker run --rm task2
