@@ -54,10 +54,11 @@ jobs:
           python-version: 3.10.13
       - name: Install libraries
         run: |
-            ls
             python -m pip install --upgrade pip
             pip install pipenv
             pipenv install
+      - name: cd to Task1
+        run: cd src/task1
       - name: Copy .env file
         run: cp .env_template .env
       - name: Load .env file
@@ -65,15 +66,13 @@ jobs:
         uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: .env
-      - name: Build Docker Image
-        run: |
-              cd src/task1
-              docker build -t task1 .
+      - name: docker build Task1-app
+        run: docker build -t task1 .
 
-      - name: Run Docker Container
-        run: docker run -d -p ${{ env.FASTAPI_PORT }}:${{ env.FASTAPI_PORT }} task1-app
+      - name: docker run Task1-app
+        run: docker run -d -p ${{ env.FASTAPI_PORT }}:${{ env.FASTAPI_PORT }} Task1-app
 
-      - name: Test
+      - name: curl Task1-app
         run:  |
               sleep 5
               curl -v http://localhost:${{ env.FASTAPI_PORT }}
