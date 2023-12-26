@@ -70,13 +70,18 @@ jobs:
         run:  |
               sleep 5
               curl -v http://localhost:${{ env.FASTAPI_PORT }}
-      - name: /predict_batch endpoint test
-        id: assert-predict-batch
-        uses: GuillaumeFalourd/assert-command-line-output@v2.2
-        with:
-          command_line: python src/task1/test_app.py
-          contains: Returned 200
-          expected_result: PASSED
-      - name: print /predict_batch request output
-        if: steps.assert-predict-batch.outcome == 'failure'
-        run: cat output.txt
+      - name: request /predict_batch and verify output
+        id: predict-batch-test
+        run: |
+          result=$(python src/task1/test_app.py | tee src/task1/output.txt)
+          if [[ "$result" == *Returned200* ]]; then
+            echo "Test passed - desired string was found"
+          else
+            echo "Test failed - desired string was not found"
+            exit 1
+          fi
+      - name: Output of the /predict_batch request
+        if: steps.predict-batch-test.outcome == 'failure'
+        run: |
+              echo "/predict_batch failed with the following output"
+              cat src/task1/output.txt
