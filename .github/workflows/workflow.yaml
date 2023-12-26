@@ -53,7 +53,6 @@ jobs:
             cd src/task1
             cp .env_template .env
       - name: Load .env file
-        id: dotenv
         uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: src/task1/.env
@@ -74,15 +73,11 @@ jobs:
         id: predict-batch-test
         run: |
           result=$(pipenv run python src/task1/test_app.py | tee src/task1/output.txt)
-          if [[ "$result" == *Returned200* ]]; then
+          if [[ "$result" == *Returned 200* ]]; then
             echo "/predict_batch SUCCESS"
+            cat src/task1/output.txt
           else
             echo "/predict_batch FAIL"
             cat src/task1/output.txt
             exit 1
           fi
-      - name: Output of the /predict_batch request
-        if: steps.predict-batch-test.outcome == 'failure'
-        run: |
-              echo "/predict_batch failed with the following output"
-              cat src/task1/output.txt
