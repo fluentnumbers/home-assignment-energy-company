@@ -10,7 +10,40 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+
+
+
+  basic:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.10.13
+      - name: Install libraries
+        run: |
+            python -m pip install --upgrade pip
+            pip install pipenv
+            pipenv install
+
+      - name: pytest-check
+        run: |
+            pipenv run pytest
+      - name: Analysing the code with pylint
+        run: |
+            pylint $(git ls-files '*.py')
+      - name: Lint with flake8
+        run: |
+            # stop the build if there are Python syntax errors or undefined names
+            flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+            # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+            flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+
+
+  build-and-run-task1:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -25,7 +58,22 @@ jobs:
             python -m pip install --upgrade pip
             pip install pipenv
             pipenv install
-            # if [ -f requirements.txt ]; then pip install -r requirements.txt -t .; fi
-      - name: pytest-check
+      - name: Copy .env file
+        run: cp .env_template .env
+      - name: Load .env file
+        id: dotenv
+        uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: .env
+      - name: Build Docker Image
         run: |
-            pipenv run pytest
+              cd src/task1
+              docker build -t task1 .
+
+      - name: Run Docker Container
+        run: docker run -d -p ${{ env.FASTAPI_PORT }}:${{ env.FASTAPI_PORT }} task1-app
+
+      - name: Test
+        run:  |
+              sleep 5
+              curl -v http://localhost:${{ env.FASTAPI_PORT }}
