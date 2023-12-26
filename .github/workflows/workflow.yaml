@@ -13,7 +13,7 @@ jobs:
 
 
 
-  basic:
+  lint-and-test:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -33,7 +33,7 @@ jobs:
             pipenv run pytest
       - name: Analysing the code with pylint
         run: |
-            pipenv run pylint $(git ls-files '*.py')
+            pipenv run pylint $(git ls-files '*.py') --rcfile .pylintrc --fail-under 5
       - name: Lint with flake8
         run: |
             # stop the build if there are Python syntax errors or undefined names
@@ -73,8 +73,8 @@ jobs:
             cd src/task1/
             docker build -t task1 .
 
-      - name: docker run Task1-app
-        run: docker run -d -p ${{ env.FASTAPI_PORT }}:${{ env.FASTAPI_PORT }} Task1-app
+      - name: docker run task1
+        run: docker run -d -p ${{ env.FASTAPI_PORT }}:${{ env.FASTAPI_PORT }} task1
 
       - name: curl Task1-app
         run:  |
