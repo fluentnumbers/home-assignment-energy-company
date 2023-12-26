@@ -33,7 +33,7 @@ jobs:
             pipenv run pytest
       - name: Analysing the code with pylint
         run: |
-            pylint $(git ls-files '*.py')
+            pipenv run pylint $(git ls-files '*.py')
       - name: Lint with flake8
         run: |
             # stop the build if there are Python syntax errors or undefined names
@@ -60,14 +60,18 @@ jobs:
       - name: cd to Task1
         run: cd src/task1
       - name: Copy .env file
-        run: cp .env_template .env
+        run: |
+            cd src/task1
+            cp .env_template .env
       - name: Load .env file
         id: dotenv
         uses: c-py/action-dotenv-to-setenv@v2
         with:
-          env-file: .env
+          env-file: src/task1/.env
       - name: docker build Task1-app
-        run: docker build -t task1 .
+        run: |
+            cd src/task1/
+            docker build -t task1 .
 
       - name: docker run Task1-app
         run: docker run -d -p ${{ env.FASTAPI_PORT }}:${{ env.FASTAPI_PORT }} Task1-app
