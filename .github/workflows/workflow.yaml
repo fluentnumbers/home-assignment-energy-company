@@ -71,8 +71,12 @@ jobs:
               sleep 5
               curl -v http://localhost:${{ env.FASTAPI_PORT }}
       - name: /predict_batch endpoint test
+        id: assert-predict-batch
         uses: GuillaumeFalourd/assert-command-line-output@v2.2
         with:
           command_line: python src/task1/test_app.py
           contains: Returned 200
           expected_result: PASSED
+      - name: print /predict_batch request output
+        if: steps.assert-predict-batch.outcome == 'failure'
+        run: cat output.txt
