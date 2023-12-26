@@ -73,7 +73,7 @@ jobs:
         id: predict-batch-test
         run: |
           result=$(pipenv run python src/task1/test_app.py | tee src/task1/output.txt)
-          if [[ "$result" == *Returned 200* ]]; then
+          if [[ "$result" == *"Returned 200"* ]]; then
             echo "/predict_batch SUCCESS"
             cat src/task1/output.txt
           else
