@@ -6,7 +6,7 @@ COPY requirements.txt /app/
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY .env /app/
+COPY .env_template /app/.env
 COPY task1.py /app/
 COPY app.py /app/
 

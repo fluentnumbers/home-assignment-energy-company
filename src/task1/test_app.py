@@ -23,12 +23,20 @@ def predict_batch():
 
     response = requests.post(
         f"http://127.0.0.1:{FASTAPI_PORT}/predict_batch",
+        timeout=30,
         json=data,
     )
     if response.status_code == 200:
-        print(DF(response.json()["result"]))
+        print(
+            f"-----Returned {response.status_code}-----\n \
+                {DF(response.json()['result'])}"
+        )
     else:
-        print(f"Returned {response.status_code} - {response.reason}: {response.json()['detail']}")
+        print(
+            f"-----Returned {response.status_code}-----\n \
+            {response.reason}: {response.json()['detail']}"
+        )
+    return response.status_code
 
 
 def predict():
@@ -40,14 +48,20 @@ def predict():
     for row in data:
         response = requests.post(
             f"http://127.0.0.1:{FASTAPI_PORT}/predict",
+            timeout=30,
             json=row,
         )
         if response.status_code == 200:
-            print(DF(response.json()["result"]))
+            print(
+                f"-----Returned {response.status_code}-----\n \
+                  {DF(response.json()['result'])}"
+            )
         else:
             print(
-                f"Returned {response.status_code} - {response.reason}: {response.json()['detail']}"
+                f"-----Returned {response.status_code}-----\n \
+                {response.reason}: {response.json()['detail']}"
             )
+    return response.status_code
 
 
 if __name__ == "__main__":

@@ -65,7 +65,14 @@ jobs:
       - name: docker run task1
         run: docker run -d -p ${{ env.FASTAPI_PORT }}:${{ env.FASTAPI_PORT }} task1
 
+      #TODO: implement a health-check step
       - name: curl Task1-app
         run:  |
               sleep 5
               curl -v http://localhost:${{ env.FASTAPI_PORT }}
+      - name: /predict_batch endpoint test
+        uses: GuillaumeFalourd/assert-command-line-output@v2.2
+        with:
+          command_line: python src/task1/test_app.py
+          contains: Returned 200
+          expected_result: PASSED
