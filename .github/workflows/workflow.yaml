@@ -73,11 +73,12 @@ jobs:
       - name: request /predict_batch and verify output
         id: predict-batch-test
         run: |
-          result=$(python src/task1/test_app.py | tee src/task1/output.txt)
+          result=$(pipenv run python src/task1/test_app.py | tee src/task1/output.txt)
           if [[ "$result" == *Returned200* ]]; then
-            echo "Test passed - desired string was found"
+            echo "/predict_batch SUCCESS"
           else
-            echo "Test failed - desired string was not found"
+            echo "/predict_batch FAIL"
+            cat src/task1/output.txt
             exit 1
           fi
       - name: Output of the /predict_batch request
