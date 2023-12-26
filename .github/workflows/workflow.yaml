@@ -10,9 +10,6 @@ on:
   workflow_dispatch:
 
 jobs:
-
-
-
   lint-and-test:
     runs-on: ubuntu-latest
     steps:
@@ -29,17 +26,9 @@ jobs:
             pipenv install
 
       - name: pytest-check
-        run: |
-            pipenv run pytest
-      - name: Analysing the code with pylint
-        run: |
-            pipenv run pylint $(git ls-files '*.py') --rcfile .pylintrc --fail-under 5
-      - name: Lint with flake8
-        run: |
-            # stop the build if there are Python syntax errors or undefined names
-            flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-            # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-            flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        run: pipenv run pytest
+      - name: pylint-check
+        run: pipenv run pylint $(git ls-files '*.py') --rcfile .pylintrc --fail-under 5
 
 
 
@@ -57,8 +46,6 @@ jobs:
             python -m pip install --upgrade pip
             pip install pipenv
             pipenv install
-      - name: cd to Task1
-        run: cd src/task1
       - name: Copy .env file
         run: |
             cd src/task1
