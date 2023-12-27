@@ -20,3 +20,8 @@
 - [Assignment](src/task3/README.md#halt-excessive-api-usage)
 - [How-to](src/task3/README.md#how-to)
 - [Results](src/task3/README.md#results)
+
+
+## Disclaimer: AI assistants' usage
+
+ChatGPT has been used for creating boilerplate code and debug concept solutions for Tasks 1 and 2.
