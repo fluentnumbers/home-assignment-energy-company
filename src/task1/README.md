@@ -1,4 +1,6 @@
-# 1. Productionise the training and inference of a model
+# Task 1
+
+## Productionise the training and inference of a model
 
 ### Scenario
 
@@ -31,25 +33,60 @@ The extra tricks you possibly have up your sleeve can consist of any good practi
 
 ### Files
 
-  - [model_toon.ipynb](https://sacodeassessment.blob.core.windows.net/public/model_toon.ipynb)
-  - [models.zip](https://sacodeassessment.blob.core.windows.net/public/models.zip)
-  - [data_set.csv](https://sacodeassessment.blob.core.windows.net/public/data_set.csv)
-  - [column_info.csv](https://sacodeassessment.blob.core.windows.net/public/column_info.csv)
+- [model_toon.ipynb](https://sacodeassessment.blob.core.windows.net/public/model_toon.ipynb)
+- [models.zip](https://sacodeassessment.blob.core.windows.net/public/models.zip)
+- [data_set.csv](https://sacodeassessment.blob.core.windows.net/public/data_set.csv)
+- [column_info.csv](https://sacodeassessment.blob.core.windows.net/public/column_info.csv)
 
+## How-to
 
-  ## INSTRUCTIONS
+### Prerequisites
 
-#### Prerequisites
 - A virtual Python3.10 environment. For instance, using `pipenv install` in the project root
 - Rename `.env_template` to `.env`
 
-### Local script
-Run `python task1.py`
+### Run as a local script
 
-### Docker
+Run [task1.py](./task1.py): `python src/task1/task1.py`
+
+### Deploy in a Docker container
+
 - Build and run the container:
-`docker build . --tag task1`
-`docker run -p 5000:5000 task1`
-- Access the FastAPI on the host: http://localhost:5000
-- Test the container on a given dataset:
-`python src/task1/test_app.py`
+
+```bash
+cd src/task1
+docker build . --tag task1
+docker run -p 5000:5000 task1
+```
+
+- Access the FastAPI on the host: <http://localhost:5000>
+- Manually test the container on a given dataset: `python src/task1/test_app.py`
+
+## Results
+
+Given Jupyter notebook is productionalized following best practices
+
+### Implemented
+
+#### :heavy_check_mark: Primary functionality
+
+- Refactored codebase with functionality to load, preprocess data, run latest model to batch predict
+- CI workflow: [workflow.yaml](../../.github/workflows/workflow.yaml)
+- FastAPI [app.py](./app.py) to create an endpoint for predict_batch()
+- [Dockerfile](./Dockerfile) to containerize the app
+
+#### :heavy_check_mark: Secondary functionality
+
+- OOP-based solution: Predictor() class
+- CI includes static linting, unit-testing, but also integration and deployment tests
+- [pre-commit-hooks](../../.pre-commit-config.yaml)
+- logging
+- FastAPI app [status endpoints](./tools/state.py)
+- unittests stub: [test_tasks.py](../../tests/test_tasks.py)
+
+#### ⬜ TODO ideas
+
+- Makefile
+- FIXME: /predict endpoint for single datapoint predictions (nan-filling fails with all-nans in a column)
+- FIXME: nan-values are not json-serializable
+- Pydantic models with type-checking in-place
