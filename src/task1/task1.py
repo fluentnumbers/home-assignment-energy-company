@@ -11,7 +11,7 @@ from nptyping import NDArray
 from nptyping.shape import Shape
 from pandas import DataFrame as DF
 
-np1d = NDArray[Shape["*"], Any]
+np1d = NDArray[Shape["*"], Any]  # one-dimensional np-array
 
 
 load_dotenv()
@@ -49,7 +49,7 @@ class Predictor:
             model_path (Path): _description_
             store_as_csv (bool, optional): _description_. Defaults to False.
         """
-        # TODO: assertions
+        # TODO: add more assertions
         assert model_path.exists(), f"Model object file {model_path} not found"
         with open(model_path.as_posix(), "rb") as file:
             self.model = pickle.load(file)
@@ -64,10 +64,9 @@ class Predictor:
         """Perform all preprocessing operatione (e.g. nan-filling) on the dataset
 
         Args:
-            df_raw (DF): _description_
+            df_raw (DF): dataframe with all necessary predictors (self.predictors)
+            !!!! and having at least one non-NaN value in each column
 
-        Returns:
-            DF: _description_
         """
         # TODO: fix the case when df_raw has one row with NaN values.
 
@@ -91,7 +90,8 @@ class Predictor:
             return df
 
         ##### INTERNAL FUNCTIONS ####################
-
+        # TODO: get rid of hardcoded variables:
+        # auto-detect numeric, string, booleans and process accordingly
         cols_numeric = [
             "BOUWJAAR_PAND",
             "VLOEROPPERVLAK_VERBLIJFSOBJECT",
@@ -149,13 +149,10 @@ class Predictor:
         return df_preprocessed
 
     def batch_predict(self, data: DF) -> np1d:
-        """Run model.predict()
+        """Run model.predict() on a batch data
 
         Args:
-            data (DF): _description_
-
-        Returns:
-            np1d: _description_
+            data (DF): dataframe with all necessary predictors (self.predictors)
         """
         prediction_probability = self.model.predict_proba(data[self.predictors])
         buy_toon_chance = prediction_probability[:, -1]
@@ -180,11 +177,7 @@ class Predictor:
         return df_output
 
     def store_predictions(self, df_output: DF) -> None:
-        """Save outputs as a .csv file
-
-        Args:
-            df_output (DF): _description_
-        """
+        """Save outputs as a .csv file"""
         output_path = Path(f"{self.processing_time}.csv")
         df_output.to_csv(output_path, index=False)
         logger_task1.info(f"Output stored at: {output_path}")
@@ -199,7 +192,7 @@ class Predictor:
             ValueError: if NaN-values remain in the dataset after the preprocessing step
 
         Returns:
-            DF: _description_
+            DF: output dataframe with predictions and corresponding info
         """
         self.processing_time = datetime.now().strftime(
             "%Y%m%d_%H_%M_%S"

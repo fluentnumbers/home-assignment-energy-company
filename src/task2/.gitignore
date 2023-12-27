@@ -1,0 +1,5 @@
+# .gitignore sample
+# Ignore files in this dir...
+*.log
+countries_info.csv
+# ... except for

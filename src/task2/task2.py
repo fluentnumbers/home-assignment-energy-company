@@ -34,12 +34,14 @@ logger_task2.addHandler(handler)
 
 
 def load_dataframes(URL_COUNTRIES: str, URL_AIRPORTS: str) -> (DF, DF):
+    """Load .csv files for countries and airports"""
     df_countries = pd.read_csv(URL_COUNTRIES)
     df_airports = pd.read_csv(URL_AIRPORTS)
     return df_countries, df_airports
 
 
 def get_countries(df_countries: DF, df_airports: DF) -> DF:
+    """Filter data to get a list of countries with airports"""
     df_merged = df_countries.merge(df_airports, left_on="code", right_on="iso_country").rename(
         dict(name_x="country", name_y="airport"), axis=1
     )
@@ -53,6 +55,7 @@ def get_countries(df_countries: DF, df_airports: DF) -> DF:
 
 
 def fetch_countries_info(countries_with_airports: DF) -> DF:
+    """Iteratively query a web service for countries' info and store it into a dataframe"""
     countries_info = []
     for _, row in countries_with_airports.iterrows():
         iso_code = row["code"]
@@ -73,12 +76,14 @@ def fetch_countries_info(countries_with_airports: DF) -> DF:
 
 
 def store_countries_info(countries_info: DF) -> None:
+    """Dump countries' info as a local .csv file"""
     output_path = pl.Path(pl.Path(__file__).parent, OUTPUT_FILENAME)
     countries_info.to_csv(output_path, index=False)
     logger_task2.info(f"Saved all countries info to {output_path.as_posix()}")
 
 
 def upload_file_to_endpoint() -> None:
+    """Upload a file to a web service"""
     url = f"http://{HOST_ADDRESS}/revenues?client={CLIENT_ID}"
 
     with open(UPLOAD_FILENAME, "rb") as f:
