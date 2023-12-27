@@ -17,3 +17,6 @@
 - [Results](src/task2/README.md#results)
 
 ### Task 3
+- [Assignment](src/task3/README.md#halt-excessive-api-usage)
+- [How-to](src/task3/README.md#how-to)
+- [Results](src/task3/README.md#results)
